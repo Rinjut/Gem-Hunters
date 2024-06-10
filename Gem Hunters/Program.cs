@@ -55,14 +55,14 @@ public class Cell
 public class Board
 {
     private readonly Cell[,] Grid;
-    public Board(Cell[,] grid )
+    public Board(Cell[,] grid)
     {
         Grid = new Cell[6, 6];
         InitializeBoard();
     }
     private void InitializeBoard()
     {
-        for(int i=0; i < 6; i++)
+        for (int i = 0; i < 6; i++)
         {
             for (int j = 0; j < 6; j++)
             {
@@ -70,7 +70,7 @@ public class Board
             }
         }
         Random obstacle = new Random();
-        for(int i=0;i < 6; i++)
+        for (int i = 0; i < 6; i++)
         {
             int x = obstacle.Next();
             int y = obstacle.Next();
@@ -83,15 +83,95 @@ public class Board
         {
             int x = obstacle.Next();
             int y = obstacle.Next();
-            if(Grid[x, y].Occupant == "-")
+            if (Grid[x, y].Occupant == "-")
             {
-                Grid[x,y].Occupant = "G";
+                Grid[x, y].Occupant = "G";
             }
             else
             {
                 i--;
             }
-        
+
+        }
+    }
+
+    public void Display()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 6; j++)
+            {
+                Console.Write(Grid[i, j].Occupant + "");
+            }
+        }
+    }
+    public bool IsValidMove(Player player, char direction)
+    {
+        int destX = player.Position.X;
+        int destY = player.Position.Y;
+        if (direction == 'U')
+        {
+            destY--;
+        }
+        else if (direction == 'D')
+        {
+            destY++;
+        }
+        else if (direction == 'L')
+        {
+            destX--;
+        }
+        else if (direction == 'R')
+        {
+            destX++;
+        }
+        else
+        {
+            Console.WriteLine("Incorrect Movement");
+        }
+        if (destX < 0 || destX > 6 || destY < 0 || destY > 6)
+        {
+            return false;
+        }
+        if (Grid[destY, destX].Occupant == "O")
+        {
+            return false;
+        }
+        return true;
+    }
+    public void IsMove(Player player, char direction)
+    {
+        {
+            if (IsValidMove(player, direction))
+            {
+                int destX = player.Position.X;
+                int destY = player.Position.Y;
+                if (direction == 'U')
+                {
+                    destY--;
+                }
+                else if (direction == 'D')
+                {
+                    destY++;
+                }
+                else if (direction == 'L')
+                {
+                    destX--;
+                }
+                else if (direction == 'R')
+                {
+                    destX++;
+                }
+                if (Grid[destY, destX].Occupant == "G")
+                {
+                    player.gemCount++;
+                    Grid[destY, destX].Occupant = "-";
+                }
+                Grid[player.Position.Y, player.Position.X].Occupant = "-";
+                Grid[destY, destX].Occupant = player.Name;
+                player.Position= new Position(destX, destY);
+            }
+
         }
     }
 }
